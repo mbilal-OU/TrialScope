@@ -1,165 +1,90 @@
-<div align="center">
+<p align="center"><img src="assets/overview.svg" width="100%" alt="TrialScope: study cohort, timelines, and decision brief. Concept diagram, not research results."/></p>
 
-# TrialScope
-### Clinical R&D · Trial performance intelligence
+<p align="center"><strong>Clinical research operations · Study benchmarking · Transparent prediction</strong></p>
+<p align="center"><a href="https://clinicaltrials.gov/data-api/about-api">Official data</a> · <a href="#the-analytical-case">Analytical case</a> · <a href="#investigation-plan">Investigation</a> · <a href="#learning-lab">Learning lab</a> · <a href="#interview-story">Interview story</a></p>
 
-**Real-world data · Reproducible analytics · Industry-focused learning**
+> [!NOTE]
+> **Planning stage — no study records processed or numerical results reported yet.** The illustration is an original explanatory schematic, not an analysis chart.
 
-![Status](https://img.shields.io/badge/status-planning-64748b?style=flat-square)
-![Python](https://img.shields.io/badge/Python-learning%20path-3776AB?style=flat-square&logo=python&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-planned-336791?style=flat-square)
-![Dataset](https://img.shields.io/badge/data-public%20source-2563eb?style=flat-square)
+## The analytical case
 
-[Why this project?](#why-this-project) · [Research questions](#research-questions) · [Learning roadmap](#learning-roadmap) · [Data](#data-source) · [Interview case](#interview-case)
+**Could a clinical operations team defend its proposed study timeline using a transparent benchmark of comparable historical trials?**
 
-</div>
+Trials vary in phase, intervention, disease area, design, and enrollment. A headline average across all trials would mislead decision-makers. TrialScope will build a reproducible *cohort definition* first, then explore the variation in reported study timelines.
 
-> [!IMPORTANT]
-> **Project stage: planning.** This repository defines a learning and analysis plan, not completed research. No dataset has been acquired or analyzed here yet. We will publish results only after running and verifying the code.
+| Industry stakeholder | Their decision | What our analysis can honestly contribute |
+|---|---|---|
+| Clinical operations | Is a proposed timeline plausible? | Historical duration distributions for comparable records |
+| Portfolio strategy | Where does uncertainty come from? | Transparent summaries and sensitivity checks |
+| Data science | Does prediction add value? | A baseline-versus-model comparison using eligible predictors |
 
-## Why this project?
+### Define the outcome *before* modeling
 
-TrialScope explores real clinical trial records to understand trial characteristics and historical timelines. The goal is a defensible benchmark for research planning—not a system that promises individual trial success.
+- **Observation:** one registered study, not one participant.
+- **Outcome candidate:** time between **actual** study start and **actual** primary completion date; final definition to be documented after checking fields.
+- **Eligible subset:** an explicitly defined selection of interventional studies with interpretable records.
+- **Primary caution:** do not use revised enrollment, post-start status, or other future information as if available at initial planning.
 
-**Decision problem:** How do study design, phase, enrollment, and therapeutic area relate to observed trial duration?
-
-## Research questions
-
-1. How do reported durations vary across clinical phases?
-2. How do enrollment and study design relate to observed duration?
-3. What distinguishes completed versus terminated studies in a clearly defined cohort?
-4. Can a simple duration predictor beat a transparent baseline using only information available at prediction time?
-
-## At a glance
-
-| Dimension | Scope |
-|:--|:--|
-| Industry | Clinical R&D |
-| Source | [ClinicalTrials.gov — API and data downloads](https://clinicaltrials.gov/data-api/about-api) |
-| Data type | Public, observational records |
-| Analytical approach | Descriptive analysis first; statistical modeling only when justified |
-| Key outcome | Transparent, reproducible findings—not a performance score alone |
-| Current stage | **Planned — no reported results** |
-
-## Analysis workflow
+## Investigation plan
 
 ```mermaid
-flowchart LR
-  A["Define question"] --> B["Retrieve public data"]
-  B --> C["Validate & clean"]
-  C --> D["Explore patterns"]
-  D --> E["Statistical analysis"]
-  E --> F["Validate conclusions"]
-  F --> G["Report & communicate"]
+flowchart TD
+  A["A study planning question"] --> B["Define comparable trial cohort"]
+  B --> C{"Date fields and inclusion rules valid?"}
+  C -- "No" --> D["Document exclusions and missingness"]
+  C -- "Yes" --> E["Summarize duration by phase and design"]
+  D --> E
+  E --> F["Compare historical baseline"]
+  F --> G{"Is prediction justified?"}
+  G -- "No" --> H["Benchmark report with uncertainty"]
+  G -- "Yes" --> I["Train-only preprocessing + time-aware evaluation"]
+  I --> H
 ```
 
-## Learning roadmap
+**Analytical questions**
 
-- [ ] **01 · Understand the data** — Define a study, fields, dates, status, and the unit of analysis
-- [ ] **02 · Acquire a small cohort** — Retrieve actual public records; document filters and download date
-- [ ] **03 · Clean and audit** — Check dates, missing fields, inconsistencies, and study eligibility
-- [ ] **04 · Explore** — Summarize durations, cohorts, and uncertainty with clear plots
-- [ ] **05 · Learn SQL** — Create and query a small relational clinical-trial dataset
-- [ ] **06 · Model carefully** — Start with baselines, then regression if justified
-- [ ] **07 · Communicate** — Produce an evidence-based trial benchmarking brief
+1. What is the distribution—not just the mean—of actual study duration in the selected cohort?
+2. How do patterns differ by trial phase, enrollment, and intervention type?
+3. How sensitive are comparisons to date completeness and eligibility definitions?
+4. If meaningful, can a simple duration model improve on an honest baseline?
 
-<details>
-<summary><strong>📘 What I want to learn</strong> — expand</summary>
+## Learning lab
 
-- Python basics: pandas, CSV/JSON, types, missing data
-- SQL: SELECT, WHERE, JOIN, GROUP BY
-- Statistical summaries, variation, uncertainty, regression
-- Temporal validity: avoid using information recorded after a prediction date
-- Baseline comparison and evaluation metrics
-- Research communication for clinical operations
+| Order | Concept to master | Python / SQL evidence to produce |
+|:--|:--|:--|
+| 01 | Observation, variable, type, outcome | Inspect one JSON record and map useful columns |
+| 02 | Missingness and cohort selection | Explain every exclusion with counts |
+| 03 | Distributions and uncertainty | Histograms, medians, quantiles, sample sizes |
+| 04 | SQL relational analysis | Query by phase and study characteristics |
+| 05 | Regression and generalization | Compare a simple baseline with a model *if justified* |
+| 06 | Leakage and limitations | Show which fields are unavailable at prediction time |
 
-**Learning rule:** Before adding a method, document what it measures, why it is appropriate, basic assumptions, Python implementation, actual output, and its limitations.
+<details><summary><strong>What must be true before claiming results?</strong></summary>
 
-</details>
-
-<details>
-<summary><strong>🧪 Validation and reproducibility standards</strong> — expand</summary>
-
-- Keep original source files immutable and document retrieval dates.
-- Define the unit of observation, inclusion criteria, and outcome variables.
-- Inspect missingness, duplicate records, inconsistent definitions, and potential selection bias.
-- Establish a simple baseline before using more complex models.
-- Separate training and validation information for any predictive analysis; avoid leakage.
-- Record important methodological decisions **before** comparing candidate results.
-- Publish reproducible instructions and dependency versions.
-- Distinguish association, prediction, and causation.
+- [ ] Retrieval date, source query, and definitions are recorded.
+- [ ] Actual and estimated dates are not mixed without an explicit rule.
+- [ ] The denominator and excluded studies are visible.
+- [ ] Baselines, validation rules, and model variables are declared before performance comparison.
+- [ ] All figures can be regenerated from documented code.
+- [ ] Final interpretation distinguishes benchmarking, prediction, and causation.
 
 </details>
 
-## Data source
+## Data contract
 
-[ClinicalTrials.gov — API and data downloads](https://clinicaltrials.gov/data-api/about-api)
+**Official source:** [ClinicalTrials.gov Data API](https://clinicaltrials.gov/data-api/about-api). Public registration records have inconsistent completeness and time-varying updates. Data extraction, eligible fields, and retrieval dates will be documented before results are added.
 
-We will document source URLs, access dates, field definitions, terms of use, and any cleaning rules before producing findings. **Do not commit private or sensitive data.**
+**Planned output:** a small, inspectable clinical trial benchmark report, supporting SQL and notebooks, and optional interactive exploration only after results are validated.
 
-## Proposed repository layout
+## Interview story
 
-```text
-TrialScope/
-├── README.md
-├── data/
-│   └── README.md                 # provenance and download instructions
-├── notebooks/                    # sequential, explainable analyses
-├── sql/                          # SQL queries, where appropriate
-├── figures/                      # verified exported results
-├── results/                      # reproducible outputs
-└── docs/
-    ├── learning_log.md
-    ├── project_decisions.md
-    └── glossary.md
-```
+> *A clinical operations manager asks whether a proposed 24-month trial timeline is realistic.*
 
-> This is a **target layout**, not a claim that these directories have already been created.
+I should be able to explain how I chose comparable trials, why I report a distribution rather than a single average, what information was missing, whether predictive modeling added anything, and why none of this proves a trial will complete on schedule.
 
-## Expected deliverables
-
-- [ ] Documented, reproducible acquisition and cleaning notebook
-- [ ] SQL exploration of trial characteristics
-- [ ] Verified descriptive statistics and graphics
-- [ ] Baseline-versus-model evaluation if justified
-- [ ] Concise clinical operations interpretation
-
-## Interpretation guardrails
-
-- Trial records may contain estimated dates; distinguish them from actual reported dates.
-- Reporting completeness and selection into the database may bias comparisons.
-- Associations do not establish causes of trial delay.
-- Retrospective duration predictions may be misleading if input variables were unavailable at trial start.
-
-## Interview case
-
-> **Question a stakeholder might ask:** Could we benchmark a proposed 24-month study against historical trials?
-
-**What this portfolio should demonstrate:** The ability to filter comparable records, report variability and missingness, evaluate a model without hindsight leakage, and communicate uncertainty.
-
-<details>
-<summary><strong>🎤 Interview preparation checklist</strong> — expand</summary>
-
-- [ ] Explain the business or research decision in one minute.
-- [ ] Explain data sources, inclusion criteria, and dataset limitations.
-- [ ] Walk through the SQL / Python transformations independently.
-- [ ] Explain why the statistical method or model is appropriate.
-- [ ] Present verified numerical findings (never placeholders).
-- [ ] Describe an alternative explanation and an important limitation.
-- [ ] Explain what a stakeholder could reasonably do next.
-
-</details>
+**Project milestones:** [ ] Cohort defined · [ ] Data audited · [ ] Statistics interpreted · [ ] SQL verified · [ ] Model decision justified · [ ] Findings published
 
 ---
+<sub>Other industry analytics projects: <a href="https://github.com/mbilal-OU/PharmaSpend">PharmaSpend</a> (commercial analytics) · <a href="https://github.com/mbilal-OU/SafeSignal">SafeSignal</a> (pharmacovigilance)</sub>
 
-<div align="center">
-
-**Part of an industry Data Science learning series**
-
-[TrialScope](https://github.com/mbilal-OU/TrialScope) · [PharmaSpend](https://github.com/mbilal-OU/PharmaSpend) · [SafeSignal](https://github.com/mbilal-OU/SafeSignal)
-
-[Research portfolio](https://mbilal-ou.github.io/portfolio/) · [GitHub profile](https://github.com/mbilal-OU)
-
-<sub>Maintained as a transparent learning and research portfolio. Claims and results will be added only after independent verification.</sub>
-
-</div>
+<p align="center"><a href="https://mbilal-ou.github.io/portfolio/">Research portfolio</a> · <a href="https://github.com/mbilal-OU">GitHub</a></p>
